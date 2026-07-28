@@ -117,6 +117,16 @@ class PerfObligation(models.Model):
         help="Optional. If set, overrides the P&L account defined in the "
         "accounting configuration for recognition entries.",
     )
+    invoiced_amount = fields.Monetary(
+        compute="_compute_invoiced_amount",
+        currency_field="currency_id",
+        help="Total invoiced/billed amount for this obligation.",
+    )
+    is_over_invoiced = fields.Boolean(
+        string="Over Invoiced",
+        compute="_compute_is_over_invoiced",
+        search="_search_is_over_invoiced",
+    )
 
     def unlink(self):
         posted = self.env["account.move.line"].search(
@@ -855,6 +865,64 @@ class PerfObligation(models.Model):
         elif self.perf_type == "expense":
             amount = pl_balance + bs_balance
         return amount
+
+    def _compute_invoiced_amount(self):
+        for rec in self:
+            rec.invoiced_amount = rec._get_invoiced_amount()
+
+    @api.depends("invoiced_amount", "total_amount")
+    def _compute_is_over_invoiced(self):
+        for rec in self:
+            rec.is_over_invoiced = rec.invoiced_amount > rec.total_amount
+
+    @api.model
+    def _search_is_over_invoiced(self, operator, value):
+        """Search method returning POs where invoiced_amount > total_amount."""
+        if operator not in ("=", "!=") or not isinstance(value, bool):
+            raise UserError(_("Unsupported search operator or value."))
+        positive = (operator == "=" and value) or (operator == "!=" and not value)
+        pl_groups = self.env["account.move.line"]._read_group(
+            domain=[
+                ("perf_obligation_id", "!=", False),
+                ("parent_state", "in", ("draft", "posted")),
+                ("account_id.internal_group", "in", ("income", "expense")),
+            ],
+            groupby=["perf_obligation_id", "account_id"],
+            aggregates=["balance:sum"],
+        )
+        bs_groups = self.env["account.move.line"]._read_group(
+            domain=[
+                ("perf_obligation_id", "!=", False),
+                ("parent_state", "in", ("draft", "posted")),
+                (
+                    "account_id.account_type",
+                    "in",
+                    ("asset_current", "liability_current"),
+                ),
+            ],
+            groupby=["perf_obligation_id"],
+            aggregates=["balance:sum"],
+        )
+        pl_balances = {}
+        for po, account, bal_sum in pl_groups:
+            key = (po.id, account.internal_group)
+            pl_balances[key] = pl_balances.get(key, 0.0) + (bal_sum or 0.0)
+        bs_balances = {po.id: bal_sum or 0.0 for po, bal_sum in bs_groups}
+        po_ids_with_lines = set(po.id for po, _, _ in pl_groups) | set(
+            bs_balances.keys()
+        )
+        pos = self.browse(po_ids_with_lines)
+        matching_ids = []
+        for po in pos:
+            pl_bal = pl_balances.get((po.id, po._get_pl_internal_group()), 0.0)
+            bs_bal = bs_balances.get(po.id, 0.0)
+            if po.perf_type == "income":
+                invoiced = -pl_bal - bs_bal
+            else:
+                invoiced = pl_bal + bs_bal
+            if invoiced > po.total_amount:
+                matching_ids.append(po.id)
+        return [("id", "in" if positive else "not in", matching_ids)]
 
     def _ensure_sole_source(self, source_record):
         """Raise if source_record is not the sole source of this obligation."""

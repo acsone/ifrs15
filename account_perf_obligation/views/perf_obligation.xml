@@ -65,6 +65,7 @@
                                 name="total_amount"
                                 string="Total Amount to Recognize"
                             />
+                            <field name="invoiced_amount" />
                             <field
                                 name="recognition_at_date_method"
                                 string="Recognition Method"
@@ -227,6 +228,12 @@
                     name="needs_regeneration"
                     string="Needs Regeneration"
                     domain="[('schedule_needs_regeneration', '=', True)]"
+                />
+                <separator />
+                <filter
+                    name="over_invoiced"
+                    string="Over Invoiced"
+                    domain="[('is_over_invoiced', '=', True)]"
                 />
                 <group expand="0" string="Group By">
                     <filter
