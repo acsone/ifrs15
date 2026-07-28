@@ -35,4 +35,21 @@
             </field>
         </field>
     </record>
+
+    <record id="perf_obligation_search_inherit_dates" model="ir.ui.view">
+        <field name="name">perf.obligation.search.inherit.dates</field>
+        <field name="model">perf.obligation</field>
+        <field name="inherit_id" ref="account_perf_obligation.perf_obligation_search" />
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='needs_regeneration']" position="before">
+                <separator />
+                <filter
+                    name="end_date_passed"
+                    string="End Date passed"
+                    domain="[('end_date', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                />
+                <separator />
+            </xpath>
+        </field>
+    </record>
 </odoo>
