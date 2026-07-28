@@ -130,3 +130,65 @@ class TestInvoicedAmount(PerfObligationCommon):
         """Non-boolean search values raise UserError."""
         with self.assertRaises(UserError):
             self.env["perf.obligation"]._search_is_over_invoiced("=", "invalid")
+
+    def test_recognized_amount_and_is_over_recognized_income(self):
+        """Test recognized amount and over-recognized search for income POs."""
+        po = self._create_obligation(perf_type="income", total_amount=1000)
+        self._create_and_post_move(
+            self.sale_journal,
+            [
+                (self.receivable_account, 500, 0, False),
+                (self.inc_credit_bs, 0, 500, po),
+            ],
+            date="2026-01-01",
+        )
+        self.assertEqual(po.invoiced_amount, 500.0)
+        self.assertEqual(po.recognized_amount, 0.0)
+        self.assertFalse(po.is_over_recognized)
+        # Recognize 800.0 (recognized > invoiced)
+        po._recognize(800, "2026-01-31", "Jan reco")
+        self.assertEqual(po.invoiced_amount, 500.0)
+        self.assertEqual(po.recognized_amount, 800.0)
+        self.assertTrue(po.is_over_recognized)
+        res_over = self.env["perf.obligation"].search(
+            [("is_over_recognized", "=", True)]
+        )
+        self.assertIn(po, res_over)
+        res_not_over = self.env["perf.obligation"].search(
+            [("is_over_recognized", "=", False)]
+        )
+        self.assertNotIn(po, res_not_over)
+
+    def test_recognized_amount_and_is_over_recognized_expense(self):
+        """Test recognized amount and over-recognized search for expense POs."""
+        po = self._create_obligation(perf_type="expense", total_amount=1000)
+        self._create_and_post_move(
+            self.purchase_journal,
+            [
+                (self.payable_account, 0, 400, False),
+                (self.exp_debit_bs, 400, 0, po),
+            ],
+            date="2026-01-01",
+        )
+        self.assertEqual(po.invoiced_amount, 400.0)
+        self.assertEqual(po.recognized_amount, 0.0)
+        self.assertFalse(po.is_over_recognized)
+        # Recognize 600.0 (recognized > invoiced)
+        po._recognize(600, "2026-01-31", "Jan reco")
+        self.assertEqual(po.invoiced_amount, 400.0)
+        self.assertEqual(po.recognized_amount, 600.0)
+        self.assertTrue(po.is_over_recognized)
+        res_over = self.env["perf.obligation"].search(
+            [("is_over_recognized", "=", True)]
+        )
+        self.assertIn(po, res_over)
+
+    def test_search_is_over_recognized_invalid_operator(self):
+        """Unsupported search operators raise UserError."""
+        with self.assertRaises(UserError):
+            self.env["perf.obligation"]._search_is_over_recognized(">", True)
+
+    def test_search_is_over_recognized_invalid_value(self):
+        """Non-boolean search values raise UserError."""
+        with self.assertRaises(UserError):
+            self.env["perf.obligation"]._search_is_over_recognized("=", "invalid")

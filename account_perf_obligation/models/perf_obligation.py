@@ -127,6 +127,16 @@ class PerfObligation(models.Model):
         compute="_compute_is_over_invoiced",
         search="_search_is_over_invoiced",
     )
+    recognized_amount = fields.Monetary(
+        compute="_compute_recognized_amount",
+        currency_field="currency_id",
+        help="Total recognized amount for this obligation.",
+    )
+    is_over_recognized = fields.Boolean(
+        string="Over Recognized",
+        compute="_compute_is_over_recognized",
+        search="_search_is_over_recognized",
+    )
 
     def unlink(self):
         posted = self.env["account.move.line"].search(
@@ -866,6 +876,7 @@ class PerfObligation(models.Model):
             amount = pl_balance + bs_balance
         return amount
 
+    @api.depends("move_line_ids.balance", "move_line_ids.parent_state")
     def _compute_invoiced_amount(self):
         for rec in self:
             rec.invoiced_amount = rec._get_invoiced_amount()
@@ -881,6 +892,19 @@ class PerfObligation(models.Model):
         if operator not in ("=", "!=") or not isinstance(value, bool):
             raise UserError(_("Unsupported search operator or value."))
         positive = (operator == "=" and value) or (operator == "!=" and not value)
+        amounts = self._get_financial_amounts_by_obligation()
+        matching_ids = [
+            po_id
+            for po_id, (po, _recognized, invoiced) in amounts.items()
+            if invoiced > po.total_amount
+        ]
+        return [("id", "in" if positive else "not in", matching_ids)]
+
+    @api.model
+    def _get_financial_amounts_by_obligation(self):
+        """Return a mapping po_id -> (po, recognized_amount, invoiced_amount)
+        for all obligations with accounting entries.
+        """
         pl_groups = self.env["account.move.line"]._read_group(
             domain=[
                 ("perf_obligation_id", "!=", False),
@@ -908,21 +932,58 @@ class PerfObligation(models.Model):
             key = (po.id, account.internal_group)
             pl_balances[key] = pl_balances.get(key, 0.0) + (bal_sum or 0.0)
         bs_balances = {po.id: bal_sum or 0.0 for po, bal_sum in bs_groups}
-        po_ids_with_lines = set(po.id for po, _, _ in pl_groups) | set(
-            bs_balances.keys()
-        )
-        pos = self.browse(po_ids_with_lines)
-        matching_ids = []
+        po_ids = set(po.id for po, _, _ in pl_groups) | set(bs_balances.keys())
+        pos = self.browse(po_ids)
+        res = {}
         for po in pos:
             pl_bal = pl_balances.get((po.id, po._get_pl_internal_group()), 0.0)
             bs_bal = bs_balances.get(po.id, 0.0)
             if po.perf_type == "income":
+                recognized = -pl_bal
                 invoiced = -pl_bal - bs_bal
             else:
+                recognized = pl_bal
                 invoiced = pl_bal + bs_bal
-            if invoiced > po.total_amount:
-                matching_ids.append(po.id)
+            res[po.id] = (po, recognized, invoiced)
+        return res
+
+    @api.model
+    def _search_is_over_recognized(self, operator, value):
+        """Search method returning POs where recognized_amount > invoiced_amount."""
+        if operator not in ("=", "!=") or not isinstance(value, bool):
+            raise UserError(_("Unsupported search operator or value."))
+        positive = (operator == "=" and value) or (operator == "!=" and not value)
+        amounts = self._get_financial_amounts_by_obligation()
+        matching_ids = [
+            po_id
+            for po_id, (_po, recognized, invoiced) in amounts.items()
+            if recognized > invoiced
+        ]
         return [("id", "in" if positive else "not in", matching_ids)]
+
+    def _get_recognized_amount(self):
+        """Return the recognized amount for this obligation."""
+        self.ensure_one()
+        [(pl_balance,)] = self.env["account.move.line"]._read_group(
+            domain=[
+                ("perf_obligation_id", "=", self.id),
+                ("parent_state", "in", ("draft", "posted")),
+                ("account_id.internal_group", "=", self._get_pl_internal_group()),
+            ],
+            aggregates=["balance:sum"],
+        )
+        pl_balance = pl_balance or 0.0
+        return -pl_balance if self.perf_type == "income" else pl_balance
+
+    @api.depends("move_line_ids.balance", "move_line_ids.parent_state")
+    def _compute_recognized_amount(self):
+        for rec in self:
+            rec.recognized_amount = rec._get_recognized_amount()
+
+    @api.depends("recognized_amount", "invoiced_amount")
+    def _compute_is_over_recognized(self):
+        for rec in self:
+            rec.is_over_recognized = rec.recognized_amount > rec.invoiced_amount
 
     def _ensure_sole_source(self, source_record):
         """Raise if source_record is not the sole source of this obligation."""
