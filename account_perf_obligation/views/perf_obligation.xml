@@ -30,6 +30,13 @@
                         class="btn-primary"
                         invisible="not supports_schedule"
                     />
+                    <button
+                        name="action_view_monthly_graph"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-bar-chart"
+                        string="Monthly Graph"
+                    />
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
