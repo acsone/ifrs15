@@ -22,17 +22,6 @@ msgid "# Sale Order Lines"
 msgstr "# lignes de commande"
 
 #. module: account_perf_obligation_sale
-#. odoo-python
-#: code:addons/account_perf_obligation_sale/models/product_template.py:0
-msgid ""
-"A recognition duration method is required when automatic performance "
-"obligation creation is enabled on product '%(name)s'."
-msgstr ""
-"Une méthode de durée de reconnaissance est nécessaire lorsque la création "
-"d'une obligation de performance automatique est autorisée sur le produit "
-"'%(name)s'."
-
-#. module: account_perf_obligation_sale
 #: model:ir.model.fields.selection,name:account_perf_obligation_sale.selection__product_template__perf_obligation_sale_recognition_method__at_once
 msgid "At once"
 msgstr "En une fois"
@@ -200,3 +189,11 @@ msgstr "Valeurs mises à jour depuis la ligne de commande %(order)s."
 #: code:addons/account_perf_obligation_sale/models/sale_order.py:0
 msgid "sale order %s"
 msgstr "Commande %s"
+
+#~ msgid ""
+#~ "A recognition duration method is required when automatic performance "
+#~ "obligation creation is enabled on product '%(name)s'."
+#~ msgstr ""
+#~ "Une méthode de durée de reconnaissance est nécessaire lorsque la création "
+#~ "d'une obligation de performance automatique est autorisée sur le produit "
+#~ "'%(name)s'."
