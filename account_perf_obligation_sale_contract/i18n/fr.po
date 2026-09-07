@@ -17,9 +17,9 @@ msgstr ""
 "X-Generator: Weblate 3.6.1\n"
 
 #. module: account_perf_obligation_sale_contract
-#: model:ir.model,name:account_perf_obligation_sale_contract.model_product_template
-msgid "Product"
-msgstr "Produit"
+#: model:ir.model,name:account_perf_obligation_sale_contract.model_contract_line
+msgid "Contract Line"
+msgstr ""
 
 #. module: account_perf_obligation_sale_contract
 #: model:ir.model,name:account_perf_obligation_sale_contract.model_sale_order_line
@@ -28,11 +28,22 @@ msgstr "Ligne de commande"
 
 #. module: account_perf_obligation_sale_contract
 #: model_terms:ir.ui.view,arch_db:account_perf_obligation_sale_contract.product_template_form_view
+#, fuzzy
+#| msgid ""
+#| "This product generates contract lines. When a sale order is\n"
+#| "                    confirmed, the performance obligation dates will be "
+#| "driven by\n"
+#| "                    the contract line dates."
 msgid ""
-"This product generates contract lines. When a sale order is\n"
-"                    confirmed, the performance obligation dates will be driven by\n"
+"This product generates contract lines. If it is used on a quotation,\n"
+"                    when the quotation is confirmed and becomes a sale "
+"order, the\n"
+"                    performance obligation dates will be driven by\n"
 "                    the contract line dates."
 msgstr ""
 "Ce produit crée des lignes de contrat. Quand une commande est confirmée, les "
 "dates de l'obligation de performance seront générées sur base des dates de "
 "la ligne de contrat."
+
+#~ msgid "Product"
+#~ msgstr "Produit"
