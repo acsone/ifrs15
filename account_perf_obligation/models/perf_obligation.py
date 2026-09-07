@@ -979,3 +979,17 @@ class PerfObligation(models.Model):
         of the number of obligations pending posting.
         """
         self._post_recognition_moves(date, companies=companies)
+
+    def action_view_monthly_graph(self):
+        self.ensure_one()
+        if self.perf_type == "income":
+            action = self.env.ref(
+                "account_perf_obligation.action_perf_obligation_income_monthly_graph"
+            ).read()[0]
+            action["domain"] = [("perf_obligation_id", "=", self.id)]
+        else:
+            action = self.env.ref(
+                "account_perf_obligation.action_perf_obligation_expense_monthly_graph"
+            ).read()[0]
+            action["domain"] = [("perf_obligation_id", "=", self.id)]
+        return action

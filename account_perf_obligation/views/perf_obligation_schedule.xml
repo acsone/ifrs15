@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 ACSONE SA/NV
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl). -->
+<odoo>
+    <record id="perf_obligation_schedule_income_monthly_view_graph" model="ir.ui.view">
+        <field name="name">perf.obligation.schedule.income.monthly.graph</field>
+        <field name="model">perf.obligation.schedule.income.monthly</field>
+        <field name="arch" type="xml">
+            <graph string="Income Recognition Monthly" stacked="0" type="bar">
+                <field name="date" interval="month" type="row" />
+                <field name="invoiced_amount" type="measure" />
+                <field name="recognized_amount" type="measure" />
+            </graph>
+        </field>
+    </record>
+
+    <record id="perf_obligation_schedule_income_monthly_view_pivot" model="ir.ui.view">
+        <field name="name">perf.obligation.schedule.income.monthly.pivot</field>
+        <field name="model">perf.obligation.schedule.income.monthly</field>
+        <field name="arch" type="xml">
+            <pivot string="Income Recognition Monthly">
+                <field name="date" interval="month" type="row" />
+                <field name="invoiced_amount" type="measure" />
+                <field name="recognized_amount" type="measure" />
+            </pivot>
+        </field>
+    </record>
+
+    <record id="perf_obligation_schedule_expense_monthly_view_graph" model="ir.ui.view">
+        <field name="name">perf.obligation.schedule.expense.monthly.graph</field>
+        <field name="model">perf.obligation.schedule.expense.monthly</field>
+        <field name="arch" type="xml">
+            <graph string="Expense Recognition Monthly" stacked="0" type="bar">
+                <field name="date" interval="month" type="row" />
+                <field name="billed_amount" type="measure" />
+                <field name="recognized_amount" type="measure" />
+            </graph>
+        </field>
+    </record>
+
+    <record id="perf_obligation_schedule_expense_monthly_view_pivot" model="ir.ui.view">
+        <field name="name">perf.obligation.schedule.expense.monthly.pivot</field>
+        <field name="model">perf.obligation.schedule.expense.monthly</field>
+        <field name="arch" type="xml">
+            <pivot string="Expense Recognition Monthly">
+                <field name="date" interval="month" type="row" />
+                <field name="billed_amount" type="measure" />
+                <field name="recognized_amount" type="measure" />
+            </pivot>
+        </field>
+    </record>
+
+    <record
+        id="action_perf_obligation_income_monthly_graph"
+        model="ir.actions.act_window"
+    >
+        <field name="name">Monthly Analysis (Income)</field>
+        <field name="res_model">perf.obligation.schedule.income.monthly</field>
+        <field name="view_mode">graph,pivot</field>
+    </record>
+
+    <record
+        id="action_perf_obligation_expense_monthly_graph"
+        model="ir.actions.act_window"
+    >
+        <field name="name">Monthly Analysis (Expense)</field>
+        <field name="res_model">perf.obligation.schedule.expense.monthly</field>
+        <field name="view_mode">graph,pivot</field>
+    </record>
+</odoo>
