@@ -1,0 +1,523 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils: https://docutils.sourceforge.io/" />
+<title>Performance Obligations - Start/End Dates</title>
+<style type="text/css">
+
+/*
+:Author: David Goodger (goodger@python.org)
+:Id: $Id: html4css1.css 9511 2024-01-13 09:50:07Z milde $
+:Copyright: This stylesheet has been placed in the public domain.
+
+Default cascading style sheet for the HTML output of Docutils.
+Despite the name, some widely supported CSS2 features are used.
+
+See https://docutils.sourceforge.io/docs/howto/html-stylesheets.html for how to
+customize this style sheet.
+*/
+
+/* used to remove borders from tables and images */
+.borderless, table.borderless td, table.borderless th {
+  border: 0 }
+
+table.borderless td, table.borderless th {
+  /* Override padding for "table.docutils td" with "! important".
+     The right padding separates the table cells. */
+  padding: 0 0.5em 0 0 ! important }
+
+.first {
+  /* Override more specific margin styles with "! important". */
+  margin-top: 0 ! important }
+
+.last, .with-subtitle {
+  margin-bottom: 0 ! important }
+
+.hidden {
+  display: none }
+
+.subscript {
+  vertical-align: sub;
+  font-size: smaller }
+
+.superscript {
+  vertical-align: super;
+  font-size: smaller }
+
+a.toc-backref {
+  text-decoration: none ;
+  color: black }
+
+blockquote.epigraph {
+  margin: 2em 5em ; }
+
+dl.docutils dd {
+  margin-bottom: 0.5em }
+
+object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
+  overflow: hidden;
+}
+
+/* Uncomment (and remove this text!) to get bold-faced definition list terms
+dl.docutils dt {
+  font-weight: bold }
+*/
+
+div.abstract {
+  margin: 2em 5em }
+
+div.abstract p.topic-title {
+  font-weight: bold ;
+  text-align: center }
+
+div.admonition, div.attention, div.caution, div.danger, div.error,
+div.hint, div.important, div.note, div.tip, div.warning {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
+
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
+
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title, .code .error {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
+
+/* Uncomment (and remove this text!) to get reduced vertical space in
+   compound paragraphs.
+div.compound .compound-first, div.compound .compound-middle {
+  margin-bottom: 0.5em }
+
+div.compound .compound-last, div.compound .compound-middle {
+  margin-top: 0.5em }
+*/
+
+div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
+
+div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
+
+div.figure {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+div.footer, div.header {
+  clear: both;
+  font-size: smaller }
+
+div.line-block {
+  display: block ;
+  margin-top: 1em ;
+  margin-bottom: 1em }
+
+div.line-block div.line-block {
+  margin-top: 0 ;
+  margin-bottom: 0 ;
+  margin-left: 1.5em }
+
+div.sidebar {
+  margin: 0 0 0.5em 1em ;
+  border: medium outset ;
+  padding: 1em ;
+  background-color: #ffffee ;
+  width: 40% ;
+  float: right ;
+  clear: right }
+
+div.sidebar p.rubric {
+  font-family: sans-serif ;
+  font-size: medium }
+
+div.system-messages {
+  margin: 5em }
+
+div.system-messages h1 {
+  color: red }
+
+div.system-message {
+  border: medium outset ;
+  padding: 1em }
+
+div.system-message p.system-message-title {
+  color: red ;
+  font-weight: bold }
+
+div.topic {
+  margin: 2em }
+
+h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
+h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
+  margin-top: 0.4em }
+
+h1.title {
+  text-align: center }
+
+h2.subtitle {
+  text-align: center }
+
+hr.docutils {
+  width: 75% }
+
+img.align-left, .figure.align-left, object.align-left, table.align-left {
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
+
+img.align-right, .figure.align-right, object.align-right, table.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+img.align-center, .figure.align-center, object.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table.align-center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: inherit }
+
+/* div.align-center * { */
+/*   text-align: left } */
+
+.align-top    {
+  vertical-align: top }
+
+.align-middle {
+  vertical-align: middle }
+
+.align-bottom {
+  vertical-align: bottom }
+
+ol.simple, ul.simple {
+  margin-bottom: 1em }
+
+ol.arabic {
+  list-style: decimal }
+
+ol.loweralpha {
+  list-style: lower-alpha }
+
+ol.upperalpha {
+  list-style: upper-alpha }
+
+ol.lowerroman {
+  list-style: lower-roman }
+
+ol.upperroman {
+  list-style: upper-roman }
+
+p.attribution {
+  text-align: right ;
+  margin-left: 50% }
+
+p.caption {
+  font-style: italic }
+
+p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+p.label {
+  white-space: nowrap }
+
+p.rubric {
+  font-weight: bold ;
+  font-size: larger ;
+  color: maroon ;
+  text-align: center }
+
+p.sidebar-title {
+  font-family: sans-serif ;
+  font-weight: bold ;
+  font-size: larger }
+
+p.sidebar-subtitle {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+p.topic-title {
+  font-weight: bold }
+
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font: inherit }
+
+pre.literal-block, pre.doctest-block, pre.math, pre.code {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+pre.code .ln { color: gray; } /* line numbers */
+pre.code, code { background-color: #eeeeee }
+pre.code .comment, code .comment { color: #5C6576 }
+pre.code .keyword, code .keyword { color: #3B0D06; font-weight: bold }
+pre.code .literal.string, code .literal.string { color: #0C5404 }
+pre.code .name.builtin, code .name.builtin { color: #352B84 }
+pre.code .deleted, code .deleted { background-color: #DEB0A1}
+pre.code .inserted, code .inserted { background-color: #A3D289}
+
+span.classifier {
+  font-family: sans-serif ;
+  font-style: oblique }
+
+span.classifier-delimiter {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+span.interpreted {
+  font-family: sans-serif }
+
+span.option {
+  white-space: nowrap }
+
+span.pre {
+  white-space: pre }
+
+span.problematic, pre.problematic {
+  color: red }
+
+span.section-subtitle {
+  /* font-size relative to parent (h1..h6 element) */
+  font-size: 80% }
+
+table.citation {
+  border-left: solid 1px gray;
+  margin-left: 1px }
+
+table.docinfo {
+  margin: 2em 4em }
+
+table.docutils {
+  margin-top: 0.5em ;
+  margin-bottom: 0.5em }
+
+table.footnote {
+  border-left: solid 1px black;
+  margin-left: 1px }
+
+table.docutils td, table.docutils th,
+table.docinfo td, table.docinfo th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  vertical-align: top }
+
+table.docutils th.field-name, table.docinfo th.docinfo-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap ;
+  padding-left: 0 }
+
+/* "booktabs" style (no vertical lines) */
+table.docutils.booktabs {
+  border: 0px;
+  border-top: 2px solid;
+  border-bottom: 2px solid;
+  border-collapse: collapse;
+}
+table.docutils.booktabs * {
+  border: 0px;
+}
+table.docutils.booktabs th {
+  border-bottom: thin solid;
+  text-align: left;
+}
+
+h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
+h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
+  font-size: 100% }
+
+ul.auto-toc {
+  list-style-type: none }
+
+</style>
+</head>
+<body>
+<div class="document" id="performance-obligations-start-end-dates">
+<h1 class="title">Performance Obligations - Start/End Dates</h1>
+
+<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! This file is generated by oca-gen-addon-readme !!
+!! changes will be overwritten.                   !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! source digest: sha256:81469668d134e7c31356cc943d9ae20a68e66bcc0426c56f2dfaca8ee0fb2da9
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+<p><a class="reference external image-reference" href="https://odoo-community.org/page/development-status"><img alt="Beta" src="https://img.shields.io/badge/maturity-Beta-yellow.png" /></a> <a class="reference external image-reference" href="http://www.gnu.org/licenses/lgpl-3.0-standalone.html"><img alt="License: LGPL-3" src="https://img.shields.io/badge/licence-LGPL--3-blue.png" /></a> <a class="reference external image-reference" href="https://github.com/acsone/ifrs15/tree/18.0/account_perf_obligation_start_end_dates"><img alt="acsone/ifrs15" src="https://img.shields.io/badge/github-acsone%2Fifrs15-lightgray.png?logo=github" /></a></p>
+<p>This module extends <a class="reference external" href="../account_perf_obligation">Performance Obligations (IFRS
+15)</a> to support time-based income and
+expense recognition using <strong>start and end dates</strong>.</p>
+<div class="section" id="features">
+<h1>Features</h1>
+<ul class="simple">
+<li><strong>Daily pro-rata recognition</strong>: automatically computes the amount to
+recognize at any given date based on the obligation’s date range.</li>
+<li><strong>Automatic schedule generation</strong>: creates draft recognition entries
+for each month-end from start date to end date, skipping periods
+already covered by posted entries.</li>
+<li><strong>End date shortening</strong>: if the end date is moved before the last
+posted entry, a single corrective draft entry is generated to unwind
+the excess without touching already-posted entries.</li>
+<li><strong>Schedule synchronization</strong>: changes to start date or end date
+automatically flag the obligation for regeneration, in addition to the
+triggers from the base module (total amount, recognition method,
+linked journal items).</li>
+<li><strong>Extensible architecture</strong>: alternative computation methods (e.g.
+full-month based) can be added by extending the selection field and
+implementing the corresponding method.</li>
+</ul>
+<p><strong>Table of contents</strong></p>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><a class="reference internal" href="#use-cases-context" id="toc-entry-1">Use Cases / Context</a></li>
+</ul>
+</div>
+<div class="section" id="use-cases-context">
+<h2><a class="toc-backref" href="#toc-entry-1">Use Cases / Context</a></h2>
+</div>
+</div>
+<div class="section" id="why-this-module">
+<h1>Why this module?</h1>
+<p>The base <em>Performance Obligations</em> module handles recognition and
+scheduling but does not define when an obligation starts and ends, nor
+how to compute the recognized amount at a given date. This is
+intentional: different businesses use different methods.</p>
+<p>This module provides the most common implementation: a <strong>daily
+pro-rata</strong> calculation over a fixed date range. It is the recommended
+starting point for any company recognizing revenue or expenses over a
+defined contract period.</p>
+</div>
+<div class="section" id="companion-modules">
+<h1>Companion modules</h1>
+<ul class="simple">
+<li><strong>account_perf_obligation</strong> <em>(required)</em>: provides the core
+performance obligation object and recognition engine.</li>
+<li><strong>account_perf_obligation_auto_schedule</strong> <em>(optional)</em>: processes
+flagged obligations automatically and asynchronously via
+<tt class="docutils literal">queue_job</tt>.</li>
+</ul>
+<div class="section" id="usage">
+<h2>Usage</h2>
+</div>
+</div>
+<div class="section" id="configure-the-obligation">
+<h1>Configure the obligation</h1>
+<p>Open a performance obligation and set the following fields:</p>
+<ul class="simple">
+<li><strong>Recognition at Date Method</strong>: select <em>Daily Pro-Rata</em>.</li>
+<li><strong>Start Date</strong> and <strong>End Date</strong>: required when the daily pro-rata
+method is selected.</li>
+</ul>
+<p><img alt="Start date, end date and recognition method fields" src="https://raw.githubusercontent.com/acsone/ifrs15/18.0/account_perf_obligation_start_end_dates/static/src/screenshots/obligation_dates.png" /></p>
+</div>
+<div class="section" id="recognize-income-or-expense-manually">
+<h1>Recognize income or expense manually</h1>
+<p>Open the <strong>Recognize Income</strong> (or <strong>Recognize Expense</strong>) wizard.</p>
+<p>The <strong>Amount to Recognize</strong> field is automatically pre-filled based on
+the selected date and the obligation’s date range. You can adjust the
+amount before confirming.</p>
+<p><img alt="Recognition wizard with pre-filled amount" src="https://raw.githubusercontent.com/acsone/ifrs15/18.0/account_perf_obligation_start_end_dates/static/src/screenshots/wizard_prefilled.png" /></p>
+</div>
+<div class="section" id="generate-the-recognition-schedule">
+<h1>Generate the recognition schedule</h1>
+<p>From the obligation form, click <strong>Generate Schedule Entries</strong>.</p>
+<p>Draft entries are created for each month-end between the start and end
+dates, skipping periods already covered by posted entries.</p>
+<blockquote>
+If the end date is shortened to before the last posted entry, a
+single corrective draft entry is generated to unwind the excess —
+posted entries are never modified.</blockquote>
+</div>
+<div class="section" id="keep-the-schedule-in-sync">
+<h1>Keep the schedule in sync</h1>
+<p>Changes to start date, end date, total amount, recognition method, or
+linked journal items automatically flag the obligation via <strong>Schedule
+Needs Regeneration</strong>.</p>
+<p>To rebuild the schedule for all flagged obligations, go to <em>Invoicing &gt;
+Accounting &gt; Performance Obligations</em>, apply the <strong>Needs Regeneration</strong>
+filter, select the obligations, and run <strong>Regenerate Schedule</strong> from the
+<em>Action</em> menu.</p>
+<p>Alternatively, install <tt class="docutils literal">account_perf_obligation_auto_schedule</tt> to have
+flagged obligations processed automatically and asynchronously.</p>
+<div class="section" id="known-issues-roadmap">
+<h2>Known issues / Roadmap</h2>
+</div>
+</div>
+<div class="section" id="developer-extensibility">
+<h1>Developer extensibility</h1>
+<p><strong>Add a new recognition method</strong></p>
+<ol class="arabic simple">
+<li>Extend the <tt class="docutils literal">recognition_at_date_method</tt> selection field on
+<tt class="docutils literal">perf.obligation</tt> with a new key (e.g. <tt class="docutils literal">&quot;monthly&quot;</tt>).</li>
+<li>Implement the corresponding
+<tt class="docutils literal">_compute_amount_to_recognize_monthly(date)</tt> method on the same
+model.</li>
+<li>Override <tt class="docutils literal">_supports_schedule()</tt> and <tt class="docutils literal">_get_schedule_dates()</tt> if
+the new method should support schedule generation.</li>
+<li>Override <tt class="docutils literal">_get_schedule_start_date()</tt> or
+<tt class="docutils literal">_get_schedule_end_date()</tt> if the schedule boundaries need
+additional constraints.</li>
+</ol>
+<p><strong>Add new trigger fields</strong></p>
+<p>Override <tt class="docutils literal">_get_recognition_trigger_fields()</tt> and append the field
+names to the returned list. This module already adds <tt class="docutils literal">start_date</tt> and
+<tt class="docutils literal">end_date</tt> to the base list.</p>
+<div class="section" id="bug-tracker">
+<h2>Bug Tracker</h2>
+<p>Bugs are tracked on <a class="reference external" href="https://github.com/acsone/ifrs15/issues">GitHub Issues</a>.
+In case of trouble, please check there if your issue has already been reported.
+If you spotted it first, help us to smash it by providing a detailed and welcomed
+<a class="reference external" href="https://github.com/acsone/ifrs15/issues/new?body=module:%20account_perf_obligation_start_end_dates%0Aversion:%2018.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">feedback</a>.</p>
+<p>Do not contact contributors directly about support or help with technical issues.</p>
+</div>
+<div class="section" id="credits">
+<h2>Credits</h2>
+</div>
+</div>
+<div class="section" id="authors">
+<h1>Authors</h1>
+<ul class="simple">
+<li>ACSONE SA/NV</li>
+</ul>
+</div>
+<div class="section" id="contributors">
+<h1>Contributors</h1>
+<ul class="simple">
+<li>Benoit Aimont &lt;<a class="reference external" href="mailto:benoit.aimont&#64;acsone.eu">benoit.aimont&#64;acsone.eu</a>&gt;</li>
+<li>Stéphane Bidoul &lt;<a class="reference external" href="mailto:stephane.bidoul&#64;acsone.eu">stephane.bidoul&#64;acsone.eu</a>&gt;</li>
+</ul>
+</div>
+<div class="section" id="maintainers">
+<h1>Maintainers</h1>
+<p>This module is part of the <a class="reference external" href="https://github.com/acsone/ifrs15/tree/18.0/account_perf_obligation_start_end_dates">acsone/ifrs15</a> project on GitHub.</p>
+<p>You are welcome to contribute.</p>
+</div>
+</div>
+</body>
+</html>
